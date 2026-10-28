@@ -1,0 +1,11 @@
+Rhythm of Life audio library
+
+This project uses locally hosted ambience tracks intended for calming website use. Replace these files with licensed or self-owned tracks before publishing publicly.
+
+Sources to confirm before production release:
+- Rain ambience: self-owned or royalty-free ambient loop
+- Forest ambience: self-owned or royalty-free ambient loop
+- Ocean ambience: self-owned or royalty-free ambient loop
+- Bowl ambience: self-owned or royalty-free meditation tone
+
+All files should be mono, 60-90s loops, and web-safe for use on GitHub Pages.
