@@ -27,6 +27,45 @@ export const howItWorks = [
   },
 ]
 
+export const resetPractice = [
+  {
+    number: '01',
+    title: 'Arrive',
+    text: 'Let your shoulders soften. Feel the support beneath you, without needing to change anything.',
+  },
+  {
+    number: '02',
+    title: 'Notice',
+    text: 'Take one easy breath and notice what is asking for your attention right now.',
+  },
+  {
+    number: '03',
+    title: 'Choose gently',
+    text: 'Ask yourself: what would feel supportive for the next ten minutes?',
+  },
+]
+
+export const dailyRhythm = [
+  {
+    time: 'Morning',
+    title: 'Begin before the rush',
+    text: 'Take a quiet moment to notice how you feel before deciding what the day needs from you.',
+    prompt: 'What pace would feel kind today?',
+  },
+  {
+    time: 'Midday',
+    title: 'Make room to reset',
+    text: 'Pause between tasks. Unclench your jaw, take a comfortable breath, and return to one thing at a time.',
+    prompt: 'What can wait until later?',
+  },
+  {
+    time: 'Evening',
+    title: 'Let the day be complete',
+    text: 'Name one thing you carried and one thing you can set down for tonight.',
+    prompt: 'What felt like enough today?',
+  },
+]
+
 export const methods = [
   {
     title: 'Emotional healing',

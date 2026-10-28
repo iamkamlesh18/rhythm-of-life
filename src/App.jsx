@@ -3,7 +3,7 @@ import { motion } from 'motion/react'
 import { ArrowRight, CheckCircle2, Heart, MessageCircle, Sparkles, Volume2, VolumeX, Waves } from 'lucide-react'
 import { FaWhatsapp } from 'react-icons/fa'
 import { waLink } from './lib/whatsapp'
-import { mirrorLines, shiftPoints, howItWorks, methods, audience, affirmations, faqs, finalCta, footerLinks } from './content/site'
+import { mirrorLines, shiftPoints, howItWorks, resetPractice, dailyRhythm, methods, audience, affirmations, faqs, finalCta, footerLinks } from './content/site'
 import { challengeEntries } from './content/challenge'
 import { quizQuestions, quizResults } from './content/quiz'
 import { readStorage, writeStorage } from './lib/storage'
@@ -19,6 +19,7 @@ function App() {
   const [result, setResult] = useState(null)
   const [challengeOpen, setChallengeOpen] = useState(false)
   const [secretOpen, setSecretOpen] = useState(false)
+  const [activeAffirmation, setActiveAffirmation] = useState(0)
 
   const savedChallenge = useMemo(
     () => readStorage('rol.challenge.v1', { startedOn: new Date().toISOString().slice(0, 10), done: [] }),
@@ -31,6 +32,14 @@ function App() {
     const soundState = readStorage('rol.sound.v1', { enabled: false, track: 'rain' })
     setSoundEnabled(Boolean(soundState.enabled))
     setSelectedTrack(soundState.track || 'rain')
+  }, [])
+
+  useEffect(() => {
+    const interval = window.setInterval(() => {
+      setActiveAffirmation((current) => (current + 1) % affirmations.length)
+    }, 6000)
+
+    return () => window.clearInterval(interval)
   }, [])
 
   useEffect(() => {
@@ -250,9 +259,9 @@ function App() {
             </div>
           </motion.section>
 
-          <section className="affirmation-strip">
+          <section className="affirmation-strip" aria-live="polite">
             {affirmations.map((affirmation, index) => (
-              <div key={affirmation} className={`affirmation-word ${index === 0 ? 'active' : ''}`}>
+              <div key={affirmation} className={`affirmation-word ${index === activeAffirmation ? 'active' : ''}`}>
                 {affirmation}
               </div>
             ))}
@@ -270,6 +279,23 @@ function App() {
                 </div>
                 <div>
                   <p className="mini-label">Current streak</p>
+
+              <motion.section className="container section-spacing practice-section" initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.8 }}>
+                <div className="section-heading narrow">
+                  <span className="eyebrow">A small return</span>
+                  <h2>A gentle reset for wherever you are.</h2>
+                  <p>There is nothing to get right here. Take what is useful and leave the rest.</p>
+                </div>
+                <div className="practice-grid">
+                  {resetPractice.map((step) => (
+                    <article key={step.number} className="practice-step">
+                      <span className="practice-number">{step.number}</span>
+                      <h3>{step.title}</h3>
+                      <p>{step.text}</p>
+                    </article>
+                  ))}
+                </div>
+              </motion.section>
                   <h3>{challengeDone.length} / 90 days</h3>
                   <button type="button" className="secondary-button" onClick={() => setChallengeOpen((prev) => !prev)}>
                     {challengeOpen ? 'Hide challenge' : 'View challenge'}
@@ -287,6 +313,23 @@ function App() {
               )}
               {challengeToday && (
                 <div className="today-card">
+
+          <motion.section className="container section-spacing rhythm-section" initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.8 }}>
+            <div className="section-heading narrow">
+              <span className="eyebrow">Small moments, throughout the day</span>
+              <h2>Make a little room for your own rhythm.</h2>
+            </div>
+            <div className="daily-rhythm-grid">
+              {dailyRhythm.map((moment) => (
+                <article key={moment.time} className="daily-rhythm-card">
+                  <span className="mini-label">{moment.time}</span>
+                  <h3>{moment.title}</h3>
+                  <p>{moment.text}</p>
+                  <blockquote>{moment.prompt}</blockquote>
+                </article>
+              ))}
+            </div>
+          </motion.section>
                   <div>
                     <span className="mini-label">Today</span>
                     <h3>Day {challengeToday.day}</h3>

@@ -1,17 +1,17 @@
 :root {
-  --bg: #14122b;
-  --bg-soft: #1d1a3d;
-  --gold: #e8b66a;
+  --bg: #120f1f;
+  --bg-soft: #1b1632;
+  --gold: #e8c07d;
   --rose: #f3d9ce;
-  --cream: #faf6f0;
-  --mist: #a9a6c9;
+  --cream: #f9f4ee;
+  --mist: #beb8d2;
   --font-head: 'Cormorant Garamond', Georgia, serif;
   --font-body: 'Nunito', system-ui, sans-serif;
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
   --breath: 10s;
   --card: rgba(255, 255, 255, 0.04);
-  --border: rgba(255, 255, 255, 0.1);
-  --shadow: 0 30px 80px rgba(11, 10, 23, 0.35);
+  --border: rgba(255,255,255,0.12);
+  --shadow: 0 32px 80px rgba(11, 10, 23, 0.38);
   --max-width: 1200px;
   font-family: var(--font-body);
   line-height: 1.7;
@@ -32,8 +32,9 @@ body {
   min-width: 320px;
   min-height: 100vh;
   background:
-    radial-gradient(circle at top left, rgba(122, 110, 194, 0.35), transparent 30%),
-    radial-gradient(circle at bottom right, rgba(243, 217, 206, 0.18), transparent 25%),
+    radial-gradient(circle at top left, rgba(138, 125, 207, 0.35), transparent 30%),
+    radial-gradient(circle at bottom right, rgba(232, 192, 125, 0.12), transparent 24%),
+    linear-gradient(180deg, #120f1f 0%, #171328 35%, #120f1f 100%),
     var(--bg);
   color: var(--cream);
   font-family: var(--font-body);
@@ -48,6 +49,17 @@ body::before {
   background-size: 12px 12px;
   opacity: 0.08;
   mix-blend-mode: screen;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at 15% 20%, rgba(255,255,255,0.075), transparent 20%),
+    radial-gradient(circle at 80% 10%, rgba(232,192,125,0.08), transparent 28%),
+    radial-gradient(circle at 50% 90%, rgba(138,125,207,0.1), transparent 32%);
+  animation: ambientFloat 18s ease-in-out infinite alternate;
 }
 
 img { max-width: 100%; display: block; }
@@ -65,7 +77,12 @@ h1, h2, h3, h4 {
   font-weight: 500;
   line-height: 1.1;
   margin: 0;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
+}
+
+@keyframes ambientFloat {
+  0% { transform: translate3d(-12px, 0, 0) scale(1); }
+  100% { transform: translate3d(10px, -12px, 0) scale(1.04); }
 }
 
 p {
