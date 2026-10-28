@@ -1,22 +1,23 @@
 :root {
-  --bg: #120f1f;
-  --bg-soft: #1b1632;
-  --gold: #e8c07d;
-  --rose: #f3d9ce;
-  --cream: #f9f4ee;
-  --mist: #beb8d2;
+  --paper: #eff2e9;
+  --paper-bright: #f8f8f1;
+  --ink: #1d2922;
+  --ink-soft: #58645a;
+  --green: #355a49;
+  --green-dark: #233d32;
+  --coral: #d7674d;
+  --coral-dark: #b94f39;
+  --yellow: #efc760;
+  --line: rgba(29, 41, 34, 0.15);
+  --line-strong: rgba(29, 41, 34, 0.36);
   --font-head: 'Cormorant Garamond', Georgia, serif;
   --font-body: 'Nunito', system-ui, sans-serif;
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
   --breath: 10s;
-  --card: rgba(255, 255, 255, 0.04);
-  --border: rgba(255,255,255,0.12);
-  --shadow: 0 32px 80px rgba(11, 10, 23, 0.38);
-  --max-width: 1200px;
   font-family: var(--font-body);
   line-height: 1.7;
-  color: var(--cream);
-  background: var(--bg);
+  color: var(--ink);
+  background: var(--paper);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -31,35 +32,12 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background:
-    radial-gradient(circle at top left, rgba(138, 125, 207, 0.35), transparent 30%),
-    radial-gradient(circle at bottom right, rgba(232, 192, 125, 0.12), transparent 24%),
-    linear-gradient(180deg, #120f1f 0%, #171328 35%, #120f1f 100%),
-    var(--bg);
-  color: var(--cream);
+  background-color: var(--paper);
+  background-image:
+    repeating-linear-gradient(0deg, transparent 0, transparent 47px, rgba(53, 90, 73, 0.035) 48px),
+    linear-gradient(115deg, rgba(255, 255, 255, 0.42), transparent 58%);
+  color: var(--ink);
   font-family: var(--font-body);
-}
-
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  background-image: radial-gradient(rgba(255,255,255,0.08) 0.7px, transparent 0.7px);
-  background-size: 12px 12px;
-  opacity: 0.08;
-  mix-blend-mode: screen;
-}
-
-body::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  background: radial-gradient(circle at 15% 20%, rgba(255,255,255,0.075), transparent 20%),
-    radial-gradient(circle at 80% 10%, rgba(232,192,125,0.08), transparent 28%),
-    radial-gradient(circle at 50% 90%, rgba(138,125,207,0.1), transparent 32%);
-  animation: ambientFloat 18s ease-in-out infinite alternate;
 }
 
 img { max-width: 100%; display: block; }
@@ -70,19 +48,6 @@ button, input, select { font: inherit; }
 
 #root {
   min-height: 100vh;
-}
-
-h1, h2, h3, h4 {
-  font-family: var(--font-head);
-  font-weight: 500;
-  line-height: 1.1;
-  margin: 0;
-  letter-spacing: -0.03em;
-}
-
-@keyframes ambientFloat {
-  0% { transform: translate3d(-12px, 0, 0) scale(1); }
-  100% { transform: translate3d(10px, -12px, 0) scale(1.04); }
 }
 
 p {

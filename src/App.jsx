@@ -7,13 +7,14 @@ import { mirrorLines, shiftPoints, howItWorks, resetPractice, dailyRhythm, metho
 import { challengeEntries } from './content/challenge'
 import { quizQuestions, quizResults } from './content/quiz'
 import { readStorage, writeStorage } from './lib/storage'
-import { playTrack, stopTrack, tracks } from './lib/audio'
+import { stopTrack, tracks } from './lib/audio'
 import { useSecretTap } from './hooks/useSecretTap'
 import './App.css'
 
 function App() {
-  const [soundEnabled, setSoundEnabled] = useState(false)
-  const [selectedTrack, setSelectedTrack] = useState('rain')
+  const [savedSound] = useState(() => readStorage('rol.sound.v1', { enabled: false, track: 'rain' }))
+  const [soundEnabled, setSoundEnabled] = useState(() => Boolean(savedSound.enabled))
+  const [selectedTrack, setSelectedTrack] = useState(() => savedSound.track || 'rain')
   const [quizStep, setQuizStep] = useState(0)
   const [answers, setAnswers] = useState([])
   const [result, setResult] = useState(null)
@@ -27,12 +28,6 @@ function App() {
   )
 
   const [challengeDone, setChallengeDone] = useState(savedChallenge.done || [])
-
-  useEffect(() => {
-    const soundState = readStorage('rol.sound.v1', { enabled: false, track: 'rain' })
-    setSoundEnabled(Boolean(soundState.enabled))
-    setSelectedTrack(soundState.track || 'rain')
-  }, [])
 
   useEffect(() => {
     const interval = window.setInterval(() => {
@@ -143,40 +138,52 @@ function App() {
     <>
       <div className="page-shell">
         <header className="topbar container">
-          <div className="brand-mark">
-            <span className="brand-dot" />
-            Rhythm of Life
-          </div>
+          <a className="brand-mark" href="#home" aria-label="Rhythm of Life home">
+            <span className="brand-symbol" aria-hidden="true">r.</span>
+            <span>Rhythm<br />of Life</span>
+          </a>
+          <nav className="main-nav" aria-label="Main navigation">
+            <a href="#approach">The approach</a>
+            <a href="#practice">Daily practice</a>
+            <a href="#about">About</a>
+          </nav>
           <a href={waLink('Hi, I would like to know more about Rhythm of Life.')} className="header-link" target="_blank" rel="noreferrer">
-            Begin on WhatsApp
+            <MessageCircle size={16} /> Say hello
           </a>
         </header>
 
         <main>
-          <section className="hero container section-spacing">
+          <section className="hero container section-spacing" id="home">
             <div className="hero-copy">
-              <span className="eyebrow">Return to your natural rhythm</span>
-              <h1>What if the pattern you keep repeating isn&apos;t you, it&apos;s just a rhythm?</h1>
-              <p className="lead">A gentle space for emotional release, supportive reflection and more ease in the way you move through life.</p>
+              <span className="eyebrow"><span className="eyebrow-mark" /> A practice in coming back to yourself</span>
+              <h1>There is a rhythm beneath <em>all the noise.</em></h1>
+              <p className="lead">A quieter way to meet old patterns, make room for what you feel, and find your own pace again.</p>
               <div className="action-row">
                 <a className="primary-button" href={waLink('Hi, I would like to know more about Rhythm of Life.')} target="_blank" rel="noreferrer">
                   <MessageCircle size={18} />
-                  Start on WhatsApp
+                  Begin a conversation
                 </a>
                 <button type="button" className="sound-chip" onClick={() => setSoundEnabled((prev) => !prev)} aria-label="Toggle sound ambience">
                   {soundEnabled ? <Volume2 size={16} /> : <VolumeX size={16} />}
-                  <span>{soundEnabled ? 'Sound on' : 'Sound off'}</span>
+                  <span>{soundEnabled ? 'Ambience on' : 'Ambience off'}</span>
                 </button>
               </div>
+              <p className="hero-note"><span>01</span> You don&apos;t need fixing. You need room to listen.</p>
             </div>
-            <div className="hero-visual" aria-label="Breathing representation">
-              <div className="breath-circle breath" />
-              <div className="orb orb-one" />
-              <div className="orb orb-two" />
-            </div>
+            <figure className="hero-visual">
+              <img src="https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=1500&q=85" alt="Quiet mountain lake surrounded by green hills" />
+              <figcaption><span className="image-index">FIELD NOTE 01</span><span>Find a softer pace.</span></figcaption>
+              <span className="image-stamp" aria-hidden="true">pause<br />·<br />notice<br />·<br />return</span>
+              <span className="image-edge-label" aria-hidden="true">A LITTLE SPACE TO BEGIN AGAIN</span>
+            </figure>
+            <a className="scroll-cue" href="#approach" aria-label="Scroll to the approach"><span /> Scroll to explore</a>
           </section>
 
-          <motion.section className="container section-spacing" initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.8 }}>
+          <section className="manifesto-band" aria-label="A note on the work">
+            <p>Not a new version of you. <em>A closer one.</em></p>
+          </section>
+
+          <motion.section id="approach" className="container section-spacing approach-section" initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.8 }}>
             <div className="section-heading">
               <span className="eyebrow">The Mirror</span>
               <h2>Patterns that feel familiar, but never truly belong to you.</h2>
@@ -267,7 +274,7 @@ function App() {
             ))}
           </section>
 
-          <motion.section className="container section-spacing" initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.8 }}>
+          <motion.section id="challenge" className="container section-spacing" initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.8 }}>
             <div className="section-heading">
               <span className="eyebrow">The 90-day Rhythm Challenge</span>
               <h2>Small practices, steady rhythm, no guilt if life interrupts.</h2>
@@ -277,35 +284,18 @@ function App() {
                 <div className="ring" style={{ '--progress': `${progress}%` }}>
                   <span>{progress}%</span>
                 </div>
-                <div>
-                  <p className="mini-label">Current streak</p>
-
-              <motion.section className="container section-spacing practice-section" initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.8 }}>
-                <div className="section-heading narrow">
-                  <span className="eyebrow">A small return</span>
-                  <h2>A gentle reset for wherever you are.</h2>
-                  <p>There is nothing to get right here. Take what is useful and leave the rest.</p>
-                </div>
-                <div className="practice-grid">
-                  {resetPractice.map((step) => (
-                    <article key={step.number} className="practice-step">
-                      <span className="practice-number">{step.number}</span>
-                      <h3>{step.title}</h3>
-                      <p>{step.text}</p>
-                    </article>
-                  ))}
-                </div>
-              </motion.section>
-                  <h3>{challengeDone.length} / 90 days</h3>
-                  <button type="button" className="secondary-button" onClick={() => setChallengeOpen((prev) => !prev)}>
-                    {challengeOpen ? 'Hide challenge' : 'View challenge'}
+                <div className="challenge-summary">
+                  <p className="mini-label">Your practice, at your pace</p>
+                  <h3>{challengeDone.length}<span> / 90 days</span></h3>
+                  <button type="button" className="secondary-button" onClick={() => setChallengeOpen((prev) => !prev)} aria-expanded={challengeOpen}>
+                    {challengeOpen ? 'Close day tracker' : 'Open day tracker'}
                   </button>
                 </div>
               </div>
               {challengeOpen && (
                 <div className="challenge-grid">
-                  {challengeEntries.slice(0, 9).map((entry) => (
-                    <button key={entry.day} type="button" className={`day-dot ${challengeDone.includes(entry.day) ? 'done' : ''}`} onClick={() => handleChallengeToggle(entry.day)}>
+                  {challengeEntries.map((entry) => (
+                    <button key={entry.day} type="button" className={`day-dot ${challengeDone.includes(entry.day) ? 'done' : ''}`} onClick={() => handleChallengeToggle(entry.day)} aria-pressed={challengeDone.includes(entry.day)} aria-label={`Day ${entry.day}${challengeDone.includes(entry.day) ? ', completed' : ''}`}>
                       {entry.day}
                     </button>
                   ))}
@@ -313,23 +303,6 @@ function App() {
               )}
               {challengeToday && (
                 <div className="today-card">
-
-          <motion.section className="container section-spacing rhythm-section" initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.8 }}>
-            <div className="section-heading narrow">
-              <span className="eyebrow">Small moments, throughout the day</span>
-              <h2>Make a little room for your own rhythm.</h2>
-            </div>
-            <div className="daily-rhythm-grid">
-              {dailyRhythm.map((moment) => (
-                <article key={moment.time} className="daily-rhythm-card">
-                  <span className="mini-label">{moment.time}</span>
-                  <h3>{moment.title}</h3>
-                  <p>{moment.text}</p>
-                  <blockquote>{moment.prompt}</blockquote>
-                </article>
-              ))}
-            </div>
-          </motion.section>
                   <div>
                     <span className="mini-label">Today</span>
                     <h3>Day {challengeToday.day}</h3>
@@ -343,6 +316,40 @@ function App() {
                   </button>
                 </div>
               )}
+            </div>
+          </motion.section>
+
+          <motion.section id="reset" className="container section-spacing practice-section" initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.8 }}>
+            <div className="section-heading narrow">
+              <span className="eyebrow">A small return</span>
+              <h2>A gentle reset for wherever you are.</h2>
+              <p>There is nothing to get right here. Take what is useful and leave the rest.</p>
+            </div>
+            <div className="practice-grid">
+              {resetPractice.map((step) => (
+                <article key={step.number} className="practice-step">
+                  <span className="practice-number">{step.number}</span>
+                  <h3>{step.title}</h3>
+                  <p>{step.text}</p>
+                </article>
+              ))}
+            </div>
+          </motion.section>
+
+          <motion.section id="practice" className="container section-spacing rhythm-section" initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.8 }}>
+            <div className="section-heading narrow">
+              <span className="eyebrow">Small moments, throughout the day</span>
+              <h2>Make a little room for your own rhythm.</h2>
+            </div>
+            <div className="daily-rhythm-grid">
+              {dailyRhythm.map((moment) => (
+                <article key={moment.time} className="daily-rhythm-card">
+                  <span className="mini-label">{moment.time}</span>
+                  <h3>{moment.title}</h3>
+                  <p>{moment.text}</p>
+                  <blockquote>{moment.prompt}</blockquote>
+                </article>
+              ))}
             </div>
           </motion.section>
 
@@ -362,9 +369,9 @@ function App() {
             </div>
           </motion.section>
 
-          <motion.section className="container section-spacing about-wrap" initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.8 }}>
+          <motion.section id="about" className="container section-spacing about-wrap" initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.8 }}>
             <div className="about-photo">
-              <div className="photo-frame" />
+              <img className="photo-frame" src="https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?auto=format&fit=crop&w=1200&q=85" alt="Soft morning light over a quiet field" loading="lazy" />
             </div>
             <div className="about-copy">
               <span className="eyebrow">About you</span>
