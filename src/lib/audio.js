@@ -7,10 +7,12 @@ const make = (file) =>
     src: [base + file],
     loop: true,
     volume: 0,
-    preload: false,
+    preload: true,
+    autoplay: true,
   })
 
 export const tracks = {
+  spiritual: make('spiritual-ambient.ogg'),
   rain: make('rain.mp3'),
   forest: make('forest.mp3'),
   ocean: make('ocean.mp3'),

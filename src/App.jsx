@@ -6,6 +6,7 @@ import ChallengePage from './pages/ChallengePage'
 import FaqPage from './pages/FaqPage'
 import HomePage from './pages/HomePage'
 import InnerRoomPage from './pages/InnerRoomPage'
+import MusicPage from './pages/MusicPage'
 import PracticePage from './pages/PracticePage'
 import QuizPage from './pages/QuizPage'
 import './App.css'
@@ -29,6 +30,7 @@ export default function App() {
         <Route path="practice" element={<PracticePage />} />
         <Route path="challenge" element={<ChallengePage />} />
         <Route path="about" element={<AboutPage />} />
+        <Route path="music" element={<MusicPage />} />
         <Route path="find-your-rhythm" element={<QuizPage />} />
         <Route path="faq" element={<FaqPage />} />
         <Route path="inner-room" element={<InnerRoomPage />} />

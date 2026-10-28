@@ -3,7 +3,7 @@ import PageIntro from '../components/PageIntro'
 import { tracks } from '../lib/audio'
 
 export default function InnerRoomPage() {
-  const { soundEnabled, setSoundEnabled, selectedTrack, setSelectedTrack } = useOutletContext()
+  const { soundEnabled, toggleAmbient, selectedTrack, playAmbient } = useOutletContext()
 
   return (
     <>
@@ -12,8 +12,8 @@ export default function InnerRoomPage() {
         <div className="room-content">
           <article className="room-column">
             <h3>Sound library</h3>
-            <div className="sound-grid">{Object.keys(tracks).map((trackId) => <button key={trackId} type="button" className={`track-button${selectedTrack === trackId ? ' active' : ''}`} onClick={() => { setSelectedTrack(trackId); setSoundEnabled(true) }}>{trackId}</button>)}</div>
-            <div className="mini-controls"><button type="button" onClick={() => setSoundEnabled((enabled) => !enabled)}>{soundEnabled ? 'Pause ambience' : 'Play ambience'}</button></div>
+            <div className="sound-grid">{Object.keys(tracks).map((trackId) => <button key={trackId} type="button" className={`track-button${selectedTrack === trackId ? ' active' : ''}`} onClick={() => playAmbient(trackId)}>{trackId}</button>)}</div>
+            <div className="mini-controls"><button type="button" onClick={toggleAmbient}>{soundEnabled ? 'Pause ambience' : 'Play ambience'}</button></div>
           </article>
           <article className="room-column">
             <h3>Notes</h3>

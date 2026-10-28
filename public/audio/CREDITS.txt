@@ -1,11 +1,10 @@
 Rhythm of Life audio library
 
-This project uses locally hosted ambience tracks intended for calming website use. Replace these files with licensed or self-owned tracks before publishing publicly.
+spiritual-ambient.ogg
+"Spiritual Ambient" by MusicLFiles
+Source: https://commons.wikimedia.org/wiki/File:Spiritual_Ambient_by_MusicLFiles.ogg
+License: Creative Commons Attribution 4.0 International (CC BY 4.0)
+License URL: https://creativecommons.org/licenses/by/4.0/
 
-Sources to confirm before production release:
-- Rain ambience: self-owned or royalty-free ambient loop
-- Forest ambience: self-owned or royalty-free ambient loop
-- Ocean ambience: self-owned or royalty-free ambient loop
-- Bowl ambience: self-owned or royalty-free meditation tone
-
-All files should be mono, 60-90s loops, and web-safe for use on GitHub Pages.
+Rain, forest, ocean, and bowl tracks are existing local assets. Confirm their
+licenses and attribution before public production use.

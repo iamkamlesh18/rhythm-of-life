@@ -1,134 +1,165 @@
-import { useCallback, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { motion } from 'motion/react'
-import { ArrowDown, ArrowRight, Check, Flower2, MessageCircle } from 'lucide-react'
+import { ArrowDown, ArrowRight, Check, MessageCircle, Waves } from 'lucide-react'
 import { Link, useOutletContext } from 'react-router-dom'
-import BreathWelcome from '../components/BreathWelcome'
 import SectionHeading from '../components/SectionHeading'
-import { audience, dailyRhythm, faqs, howItWorks, mirrorLines } from '../content/site'
-import { krishnaKamalImage } from '../content/media'
+import { homepageCopy } from '../content/homepageCopy'
+import { landscapeImage } from '../content/media'
 import { waLink } from '../lib/whatsapp'
+import './HomePage.css'
 
 const reveal = (delay = 0) => ({
   initial: { opacity: 0, y: 18 },
   whileInView: { opacity: 1, y: 0 },
   viewport: { once: true, amount: 0.18 },
-  transition: { duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] },
+  transition: { duration: 0.65, delay, ease: [0.22, 1, 0.36, 1] },
 })
 
 export default function HomePage() {
-  const { soundEnabled, setSoundEnabled } = useOutletContext()
-  const [showBreathWelcome, setShowBreathWelcome] = useState(true)
-  const finishBreathWelcome = useCallback(() => setShowBreathWelcome(false), [])
+  const { soundEnabled, toggleAmbient } = useOutletContext()
+  const [locale, setLocale] = useState(() => {
+    try {
+      return window.localStorage.getItem('rol.home-locale') === 'mr' ? 'mr' : 'en'
+    } catch {
+      return 'en'
+    }
+  })
+  const copy = homepageCopy[locale]
+
+  useEffect(() => {
+    document.documentElement.lang = locale
+    try {
+      window.localStorage.setItem('rol.home-locale', locale)
+    } catch {
+      // The selected language still applies for this visit.
+    }
+  }, [locale])
 
   return (
-    <div className="lotus-home">
-      {showBreathWelcome && <BreathWelcome onComplete={finishBreathWelcome} />}
-
-      <section className="lotus-hero">
-        <motion.figure className="lotus-hero-image" {...reveal()}>
-          <img src={krishnaKamalImage} alt="Two Krishna-kamal passionflowers in full bloom" />
-          <figcaption><span>KRISHNA KAMAL</span><span>Passiflora caerulea</span></figcaption>
+    <div className={`home-surface home-locale-${locale}`} lang={locale}>
+      <section className="home-hero">
+        <motion.figure className="home-hero-image" {...reveal()}>
+          <img src={landscapeImage} alt="Quiet mountain lake surrounded by green hills" />
+          <figcaption><span>RHYTHM OF LIFE</span><span>{copy.hero.imageCaption}</span></figcaption>
         </motion.figure>
-        <motion.div className="lotus-hero-copy" {...reveal(0.12)}>
-          <span className="lotus-kicker"><Flower2 size={17} /> A gentle practice of return</span>
-          <h1>Find your way back to <em>your own rhythm.</em></h1>
-          <p>Personal reflective support for understanding repeating patterns, making room for what you feel, and choosing a gentler next step.</p>
-          <div className="lotus-hero-actions">
-            <a className="lotus-button" href={waLink('Hi, I would like to know more about Rhythm of Life.')} target="_blank" rel="noreferrer"><MessageCircle size={18} />Ask about getting started</a>
-            <Link className="lotus-text-link" to="/find-your-rhythm">Try a three-question check-in <ArrowRight size={17} /></Link>
+        <motion.div className="home-hero-copy" {...reveal(0.12)}>
+          <div className="home-language-switch" role="group" aria-label={copy.switchLabel}>
+            <button type="button" className={locale === 'en' ? 'active' : ''} onClick={() => setLocale('en')} aria-pressed={locale === 'en'}>EN</button>
+            <button type="button" className={locale === 'mr' ? 'active' : ''} onClick={() => setLocale('mr')} aria-pressed={locale === 'mr'}>मराठी</button>
           </div>
-          <p className="lotus-note">A quiet place to pause, reflect, and begin again. No quick-fix promises.</p>
+          <span className="home-eyebrow"><Waves size={17} /> {copy.hero.eyebrow}</span>
+          <h1>{copy.hero.lead} <em>{copy.hero.emphasis}</em></h1>
+          <p>{copy.hero.description}</p>
+          <div className="home-hero-actions">
+            <a className="home-button" href={waLink(copy.whatsappMessage)} target="_blank" rel="noreferrer"><MessageCircle size={18} />{copy.hero.contact}</a>
+            <Link className="home-text-link" to="/find-your-rhythm">{copy.hero.checkIn} <ArrowRight size={17} /></Link>
+          </div>
+          <p className="home-note">{copy.hero.note}</p>
         </motion.div>
-        <button type="button" className="lotus-scroll" onClick={() => document.getElementById('lotus-intro')?.scrollIntoView({ behavior: 'smooth' })} aria-label="Continue to learn about Rhythm of Life"><span /> Continue <ArrowDown size={16} /></button>
+        <button type="button" className="home-scroll" onClick={() => document.getElementById('home-intro')?.scrollIntoView({ behavior: 'smooth' })} aria-label={copy.scrollLabel}><span /> {copy.hero.continueLabel} <ArrowDown size={16} /></button>
       </section>
 
-      <section className="lotus-intro" id="lotus-intro">
-        <div className="lotus-intro-inner">
-          <p className="lotus-index">01 / THE PRACTICE</p>
-          <h2>Not a new version of you.<br /><em>A closer one.</em></h2>
-          <p>Rhythm of Life is a space for emotional wellbeing and self-reflection. We start with what is happening in your life now, and move at a pace that feels supportive.</p>
+      <section className="home-manifesto" id="home-intro">
+        <div className="home-manifesto-inner">
+          <p className="home-index">{copy.manifesto.index}</p>
+          <h2>{copy.manifesto.title}<br /><em>{copy.manifesto.emphasis}</em></h2>
+          <p>{copy.manifesto.body}</p>
         </div>
-        <div className="lotus-ornament" aria-hidden="true"><Flower2 size={82} strokeWidth={0.8} /></div>
+        <div className="home-manifesto-mark" aria-hidden="true"><Waves size={76} strokeWidth={0.8} /></div>
       </section>
 
-      <motion.section className="lotus-recognition" {...reveal()}>
-        <div className="lotus-section-wrap">
-          <SectionHeading eyebrow="A familiar pattern" title="You can be capable and still feel caught in a loop." description="Noticing the pattern is a beginning, not another reason to blame yourself." />
-          <div className="lotus-patterns">
-            {mirrorLines.slice(0, 3).map((line, index) => (
-              <motion.article key={line} className="lotus-pattern" {...reveal(index * 0.08)}>
+      <motion.section className="home-section home-pattern-section" {...reveal()}>
+        <div className="home-container">
+          <SectionHeading eyebrow={copy.pattern.eyebrow} title={copy.pattern.title} description={copy.pattern.description} />
+          <div className="home-pattern-grid">
+            {copy.pattern.items.map((line, index) => (
+              <motion.article key={line} className="home-pattern-item" {...reveal(index * 0.08)}>
                 <span>0{index + 1}</span><p>{line}</p>
               </motion.article>
             ))}
           </div>
-          <Link className="lotus-text-link" to="/approach">Explore the approach <ArrowRight size={17} /></Link>
+          <Link className="home-text-link" to="/approach">{copy.pattern.link} <ArrowRight size={17} /></Link>
         </div>
       </motion.section>
 
-      <section className="lotus-method">
-        <div className="lotus-method-inner">
-          <motion.div className="lotus-method-heading" {...reveal()}>
-            <p className="lotus-index">02 / HOW IT WORKS</p>
-            <h2>Listen.<br />Release.<br /><em>Anchor.</em></h2>
-            <p>A simple rhythm for meeting yourself with more care.</p>
+      <motion.section className="home-section home-offerings" id="offerings" {...reveal()}>
+        <div className="home-container">
+          <SectionHeading eyebrow={copy.offerings.eyebrow} title={copy.offerings.title} description={copy.offerings.description} />
+          <div className="home-offering-grid">
+            {copy.offerings.items.map((service, index) => (
+              <motion.article className="home-offering" key={service.title} {...reveal(index * 0.06)}>
+                <span className="home-offering-number">0{index + 1}</span>
+                <h3>{service.title}</h3>
+                <p>{service.text}</p>
+                <a className="home-offering-link" href={waLink(`${copy.offerings.whatsappPrefix} ${service.title}.`)} target="_blank" rel="noreferrer">
+                  <MessageCircle size={16} />{copy.offerings.contact}
+                </a>
+              </motion.article>
+            ))}
+          </div>
+        </div>
+      </motion.section>
+
+      <section className="home-method-band">
+        <div className="home-container home-method-grid">
+          <motion.div className="home-method-copy" {...reveal()}>
+            <p className="home-index">{copy.method.index}</p>
+            <h2>{copy.method.title[0]}<br />{copy.method.title[1]}<br /><em>{copy.method.title[2]}</em></h2>
+            <p>{copy.method.description}</p>
+            <Link className="home-text-link" to="/approach">{copy.method.link} <ArrowRight size={17} /></Link>
           </motion.div>
-          <div className="lotus-steps">
-            {howItWorks.map((step, index) => (
-              <motion.article className="lotus-step" key={step.title} {...reveal(index * 0.08)}>
-                <span className="lotus-step-number">0{index + 1}</span>
-                <div><h3>{step.title}</h3><p>{step.text}</p></div>
-                <Flower2 size={22} strokeWidth={1} aria-hidden="true" />
+          <div className="home-method-steps">
+            {copy.method.steps.map((step, index) => (
+              <motion.article className="home-method-step" key={step.title} {...reveal(index * 0.08)}>
+                <span>0{index + 1}</span><div><h3>{step.title}</h3><p>{step.text}</p></div><Waves size={20} strokeWidth={1} aria-hidden="true" />
               </motion.article>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="lotus-ways lotus-section-wrap">
-        <SectionHeading eyebrow="Choose your next step" title="Begin in the way that feels right for you." />
-        <div className="lotus-way-list">
-          <Link to="/find-your-rhythm" className="lotus-way"><span>01</span><span><strong>Check in with yourself</strong><small>Three questions to help you notice what is present today.</small></span><ArrowRight size={19} /></Link>
-          <Link to="/practice" className="lotus-way"><span>02</span><span><strong>Try a small daily practice</strong><small>Gentle pauses for morning, midday, and evening.</small></span><ArrowRight size={19} /></Link>
-          <Link to="/challenge" className="lotus-way"><span>03</span><span><strong>Build a rhythm over time</strong><small>A flexible 90-day practice with progress saved on your device.</small></span><ArrowRight size={19} /></Link>
+      <motion.section className="home-section home-fit-section" {...reveal()}>
+        <div className="home-container home-fit-grid">
+          <div>
+            <SectionHeading eyebrow={copy.fit.eyebrow} title={copy.fit.title} />
+            <p className="home-fit-intro">{copy.fit.introduction}</p>
+          </div>
+          <div>
+            <ul className="home-fit-list">{copy.fit.items.map((item) => <li key={item}><Check size={18} />{item}</li>)}</ul>
+            <p className="home-boundary">{copy.fit.boundary}</p>
+          </div>
         </div>
-      </section>
+      </motion.section>
 
-      <section className="lotus-daily">
-        <div className="lotus-section-wrap">
-          <SectionHeading eyebrow="A moment in the day" title="A pause can be small and still be yours." />
-          <div className="lotus-daily-grid">
-            {dailyRhythm.map((moment, index) => (
-              <motion.article className="lotus-daily-item" key={moment.time} {...reveal(index * 0.08)}>
+      <section className="home-daily-band">
+        <div className="home-container">
+          <SectionHeading eyebrow={copy.daily.eyebrow} title={copy.daily.title} />
+          <div className="home-daily-grid">
+            {copy.daily.moments.map((moment, index) => (
+              <motion.article className="home-daily-item" key={moment.time} {...reveal(index * 0.08)}>
                 <span>{moment.time}</span><h3>{moment.title}</h3><p>{moment.text}</p><blockquote>{moment.prompt}</blockquote>
               </motion.article>
             ))}
           </div>
-          <Link className="lotus-text-link" to="/practice">Visit the practice page <ArrowRight size={17} /></Link>
+          <Link className="home-text-link" to="/practice">{copy.daily.link} <ArrowRight size={17} /></Link>
         </div>
       </section>
 
-      <motion.section className="lotus-fit lotus-section-wrap" {...reveal()}>
-        <div className="lotus-fit-copy">
-          <span className="lotus-kicker"><Flower2 size={17} /> A supportive place to begin</span>
-          <h2>For the season you are in.</h2>
-          <p>If something keeps repeating, or you feel stretched or disconnected from your own ease, you can start with one honest conversation.</p>
-          <p className="lotus-boundary">This supports reflection and grounding. It is not a replacement for medical or psychological care.</p>
+      <section className="home-next-step">
+        <div className="home-container home-next-grid">
+          <div><p className="home-index">{copy.next.index}</p><h2>{copy.next.title}</h2><p>{copy.next.body}</p></div>
+          <div className="home-next-actions">
+            <a className="home-button home-button-light" href={waLink(copy.whatsappMessage)} target="_blank" rel="noreferrer"><MessageCircle size={18} />{copy.next.contact}</a>
+            <Link className="home-text-link" to="/find-your-rhythm">{copy.next.checkIn} <ArrowRight size={17} /></Link>
+            <button type="button" className="home-sound" onClick={toggleAmbient}>{soundEnabled ? copy.next.soundOff : copy.next.soundOn}</button>
+          </div>
         </div>
-        <ul className="lotus-fit-list">{audience.forYou.map((item) => <li key={item}><Check size={18} />{item}</li>)}</ul>
-      </motion.section>
-
-      <section className="lotus-faq lotus-section-wrap">
-        <div className="lotus-faq-heading"><SectionHeading eyebrow="Before you reach out" title="A few clear answers." /><Link className="lotus-text-link" to="/faq">All questions <ArrowRight size={17} /></Link></div>
-        <div className="lotus-faq-list">{faqs.slice(0, 2).map((faq) => <article key={faq.question}><h3>{faq.question}</h3><p>{faq.answer}</p></article>)}</div>
       </section>
 
-      <section className="lotus-contact">
-        <div className="lotus-contact-inner">
-          <p className="lotus-index">03 / WHEN YOU ARE READY</p>
-          <h2>Start with a simple hello.</h2>
-          <p>Ask what the process involves and what it costs. You can decide what feels right in your own time.</p>
-          <a className="lotus-button lotus-button-light" href={waLink('Hi, I would like to know more about Rhythm of Life.')} target="_blank" rel="noreferrer"><MessageCircle size={18} />Begin a conversation</a>
-          <button type="button" className="lotus-sound" onClick={() => setSoundEnabled((enabled) => !enabled)}>{soundEnabled ? 'Turn ambience off' : 'Turn ambience on'}</button>
+      <section className="home-section home-faq-section">
+        <div className="home-container">
+          <div className="home-faq-heading"><SectionHeading eyebrow={copy.faq.eyebrow} title={copy.faq.title} /><Link className="home-text-link" to="/faq">{copy.faq.all} <ArrowRight size={17} /></Link></div>
+          <div className="home-faq-grid">{copy.faq.items.map((faq) => <article key={faq.question}><h3>{faq.question}</h3><p>{faq.answer}</p></article>)}</div>
         </div>
       </section>
     </div>

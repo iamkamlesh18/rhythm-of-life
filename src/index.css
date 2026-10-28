@@ -1,23 +1,37 @@
 :root {
-  --paper: #eff2e9;
-  --paper-bright: #f8f8f1;
-  --ink: #1d2922;
-  --ink-soft: #58645a;
-  --green: #355a49;
-  --green-dark: #233d32;
-  --coral: #d7674d;
-  --coral-dark: #b94f39;
-  --yellow: #efc760;
-  --line: rgba(29, 41, 34, 0.15);
-  --line-strong: rgba(29, 41, 34, 0.36);
+  --bg: #091213;
+  --bg-2: #101a1d;
+  --bg-3: #0d1718;
+  --panel: rgba(12, 20, 21, 0.8);
+  --panel-strong: #101a1b;
+  --panel-soft: rgba(24, 39, 39, 0.8);
+  --card: rgba(15, 24, 26, 0.92);
+  --card-soft: rgba(18, 31, 32, 0.8);
+  --ink: #edf4f1;
+  --ink-soft: #d3e2dd;
+  --muted: #9fb7b1;
+  --line: rgba(209, 224, 219, 0.12);
+  --line-strong: rgba(219, 228, 224, 0.2);
+  --forest: #142d2a;
+  --forest-2: #1e3c3c;
+  --emerald: #2d7f72;
+  --emerald-soft: #82b39d;
+  --gold: #d7b06b;
+  --gold-soft: #f5dfac;
+  --rose: #d8a29b;
+  --shadow-soft: 0 24px 70px rgba(0, 0, 0, 0.28);
+  --shadow-deep: 0 40px 110px rgba(0, 0, 0, 0.42);
+  --radius-xl: 34px;
+  --radius-lg: 28px;
+  --radius-md: 20px;
+  --radius-sm: 14px;
   --font-head: 'Cormorant Garamond', Georgia, serif;
   --font-body: 'Nunito', system-ui, sans-serif;
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
-  --breath: 10s;
   font-family: var(--font-body);
   line-height: 1.7;
   color: var(--ink);
-  background: var(--paper);
+  background: var(--bg);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -26,16 +40,19 @@
 
 * { box-sizing: border-box; }
 
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+}
 
 body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background-color: var(--paper);
-  background-image:
-    repeating-linear-gradient(0deg, transparent 0, transparent 47px, rgba(53, 90, 73, 0.035) 48px),
-    linear-gradient(115deg, rgba(255, 255, 255, 0.42), transparent 58%);
+  background:
+    radial-gradient(circle at top left, rgba(215, 176, 107, 0.16), transparent 24%),
+    radial-gradient(circle at top right, rgba(45, 127, 114, 0.18), transparent 22%),
+    radial-gradient(circle at bottom center, rgba(216, 162, 155, 0.12), transparent 28%),
+    linear-gradient(180deg, var(--bg) 0%, #0b1417 100%);
   color: var(--ink);
   font-family: var(--font-body);
 }
@@ -46,13 +63,9 @@ a { color: inherit; text-decoration: none; }
 
 button, input, select { font: inherit; }
 
-#root {
-  min-height: 100vh;
-}
+#root { min-height: 100vh; }
 
-p {
-  margin: 0;
-}
+p { margin: 0; }
 
 :focus-visible {
   outline: 2px solid var(--gold);
